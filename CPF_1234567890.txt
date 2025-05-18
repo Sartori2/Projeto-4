@@ -1,0 +1,6 @@
+CPF: 1234567890
+Reais: R$9988.00
+Bitcoin: BTC0.0000000
+Ethereum: ETH0.0000000
+Ripple: XRP1.0000000
+
