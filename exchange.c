@@ -17,6 +17,11 @@ struct usuario usuarios[10] = {
 
 int totalUsuarios = 2;
 
+struct admin admin = {
+    "12398745605",
+    "23456"
+};
+
 int carregar_users(char* cpf, Saldos* saldos) {
     char filename[20];
     sprintf(filename, "CPF_%s.txt", cpf);
@@ -82,11 +87,30 @@ int salvar_users(char* cpf, Saldos* saldos) {
     return 1;
 }
 
+int login_admin(){
+    char cpf[12];
+    char senha[7];
+
+    printf("==== Admin ====\n");
+    printf("= CPF: ");
+    scanf("%s", cpf);
+
+    printf("= Senha: ");
+    scanf(" %s", senha);
+    if(strcmp(admin.cpf, cpf) == 0 &&
+        strcmp(admin.senha, senha) == 0){
+            printf("= Login concluído com sucesso =\n");
+            return 1;
+    }
+    printf("= Login inválido =\n");
+    return -1;
+}
+
 int login(char* cpf_out){
     char cpf[12];
     char senha[7];
 
-    printf("=======Login====\n");
+    printf("==== Login ====\n");
     printf("= CPF: ");
     scanf("%s", cpf);
 
@@ -369,6 +393,18 @@ void atualizar_cotacao(){
     printf("Ripple: %.2f\n", valor_ripple);
 }
 
+int menu_admin(){
+    int opcao;
+    printf("\n");
+    printf("========= Admin ========\n");
+    printf("1. Cadastrar novo investidor\n");
+    printf("2. Excluir investidor\n");
+    printf("3. Cadastrar nova criptomoeda\n");
+    printf("4. Sair\n");
+    printf("Escolha uma opção: ");
+    scanf("%d", &opcao);
+    return opcao;
+}
 
 int menu(){
     int opcao;

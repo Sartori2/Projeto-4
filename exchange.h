@@ -14,7 +14,14 @@ struct usuario {
     Saldos saldos;
 };
 
+struct admin {
+    char cpf[12];
+    char senha[7];
+};
+
+int login_admin();
 int login(char* cpf_out);
+int menu_admin();
 int menu();
 int carregar_users(char* cpf, Saldos* saldos);
 int salvar_users(char* cpf, Saldos* saldos);
