@@ -22,7 +22,7 @@ int main(){
                         cadastrar_usuario();
                         break;
                     case 2:
-                        printf("=== Excluir investidor ===\n");
+                        excluir_usuario();
                         break;
                     case 3:
                         printf("=== Cadastrar nova criptomoeda ===\n");

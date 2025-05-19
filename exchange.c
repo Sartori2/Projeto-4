@@ -397,12 +397,12 @@ int cadastrar_usuario(){
     struct usuario novo_usuario;
     int c;
     while((c = getchar()) != '\n' && c != EOF);
-
     printf("Digite o nome do investidor: ");
     fgets(novo_usuario.nome, 50, stdin);
+    novo_usuario.nome[strcspn(novo_usuario.nome, "\n")] = '\0';
     printf("Digite o CPF do investidor: ");
-    scanf("%s", novo_usuario.cpf);
-
+    scanf("%11s", novo_usuario.cpf);
+    
     for(int i = 0; i < totalUsuarios; i++){
         if(strcmp(usuarios[i].cpf, novo_usuario.cpf) == 0){
             printf("CPF já cadastrado\n");
@@ -421,7 +421,6 @@ int cadastrar_usuario(){
     if(totalUsuarios < 10){
         usuarios[totalUsuarios] = novo_usuario;
         totalUsuarios++;
-
         char filename[20];
         sprintf(filename, "CPF_%s.txt", novo_usuario.cpf);
         FILE* file = fopen(filename, "w");
@@ -432,14 +431,67 @@ int cadastrar_usuario(){
         
         fprintf(file, "Nome: %s\n", novo_usuario.nome);
         fprintf(file, "CPF: %s\n", novo_usuario.cpf);
-        fprintf(file, "Reais: %.2f\n", novo_usuario.saldos.reais);
-        fprintf(file, "Bitcoin: %.7f\n", novo_usuario.saldos.bitcoin);
-        fprintf(file, "Ethereum: %.7f\n", novo_usuario.saldos.ethereum);
-        fprintf(file, "Ripple: %.7f\n", novo_usuario.saldos.ripple);
+        fprintf(file, "Reais: 0.00\n");
+        fprintf(file, "Bitcoin: 0.0000000\n");
+        fprintf(file, "Ethereum: 0.0000000\n");
+        fprintf(file, "Ripple: 0.0000000\n");
         fclose(file);
         printf("Investidor cadastrado\n");
         return 1;
+    }else{
+        printf("Limite de usuários atingido\n");
+        return 0;
     }
+}
+
+int excluir_usuario(){
+    char cpf[12];
+    printf("Digite o CPF do investidor: ");
+    scanf("%11s", cpf);
+    int c;
+    while((c = getchar()) != '\n' && c != EOF);
+    int encontrado = -1;
+
+    for(int i = 0; i < totalUsuarios; i++){
+        if(strcmp(usuarios[i].cpf, cpf) == 0){
+            encontrado = i;
+            break;
+        }
+    }
+
+    if(encontrado == -1){
+        printf("CPF não encontrado\n", cpf);
+        printf("CPF cadastrados:\n");
+        for(int i = 0; i < totalUsuarios; i++){
+            printf("- %s\n", usuarios[i].cpf);
+        }
+        return 0;
+    }
+
+    printf("\n=== Dados do Investidor ===\n");
+    printf("Nome: %s\n", usuarios[encontrado].nome);
+    printf("CPF: %s\n", usuarios[encontrado].cpf);
+    
+    char confirmar;
+    printf("CONFIRMAÇÃO - Digite (s/n) para excluir: ");
+    scanf(" %c", &confirmar);
+
+    if(confirmar == 's' || confirmar == 'S'){
+        char filename[20];
+        sprintf(filename, "CPF_%s.txt", cpf);
+        if(remove(filename) != 0){
+            printf("Não foi possível excluir o arquivo\n");
+        }
+
+        for(int i = encontrado; i < totalUsuarios - 1; i++){
+            usuarios[i] = usuarios[i + 1];
+        }
+
+        totalUsuarios--;
+        printf("Investidor excluído\n");
+        return 1;
+    }
+    return 0;
 }
 
 int menu_admin(){

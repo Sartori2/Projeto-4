@@ -24,6 +24,8 @@ int login_admin();
 int login(char* cpf_out);
 int menu_admin();
 int menu();
+int cadastrar_usuario();
+int excluir_usuario();
 int carregar_users(char* cpf, Saldos* saldos);
 int salvar_users(char* cpf, Saldos* saldos);
 int consultar_extrato(char* cpf);
