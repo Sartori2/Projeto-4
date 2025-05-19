@@ -9,6 +9,7 @@ typedef struct Saldos {
 } Saldos;
 
 struct usuario {
+    char nome[50];
     char cpf[12];
     char senha[7];
     Saldos saldos;

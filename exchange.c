@@ -393,6 +393,55 @@ void atualizar_cotacao(){
     printf("Ripple: %.2f\n", valor_ripple);
 }
 
+int cadastrar_usuario(){
+    struct usuario novo_usuario;
+    int c;
+    while((c = getchar()) != '\n' && c != EOF);
+
+    printf("Digite o nome do investidor: ");
+    fgets(novo_usuario.nome, 50, stdin);
+    printf("Digite o CPF do investidor: ");
+    scanf("%s", novo_usuario.cpf);
+
+    for(int i = 0; i < totalUsuarios; i++){
+        if(strcmp(usuarios[i].cpf, novo_usuario.cpf) == 0){
+            printf("CPF já cadastrado\n");
+            return 0;
+        }
+    }
+
+    printf("Digite a senha do investidor: ");
+    scanf("%6s", novo_usuario.senha);
+
+    novo_usuario.saldos.reais = 0;
+    novo_usuario.saldos.bitcoin = 0;
+    novo_usuario.saldos.ethereum = 0;
+    novo_usuario.saldos.ripple = 0;
+
+    if(totalUsuarios < 10){
+        usuarios[totalUsuarios] = novo_usuario;
+        totalUsuarios++;
+
+        char filename[20];
+        sprintf(filename, "CPF_%s.txt", novo_usuario.cpf);
+        FILE* file = fopen(filename, "w");
+        if(file == NULL){
+            printf("Erro ao criar o arquivo.\n");
+            return 0;
+        }
+        
+        fprintf(file, "Nome: %s\n", novo_usuario.nome);
+        fprintf(file, "CPF: %s\n", novo_usuario.cpf);
+        fprintf(file, "Reais: %.2f\n", novo_usuario.saldos.reais);
+        fprintf(file, "Bitcoin: %.7f\n", novo_usuario.saldos.bitcoin);
+        fprintf(file, "Ethereum: %.7f\n", novo_usuario.saldos.ethereum);
+        fprintf(file, "Ripple: %.7f\n", novo_usuario.saldos.ripple);
+        fclose(file);
+        printf("Investidor cadastrado\n");
+        return 1;
+    }
+}
+
 int menu_admin(){
     int opcao;
     printf("\n");

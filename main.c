@@ -19,7 +19,7 @@ int main(){
                 opcao_adm = menu_admin();
                 switch(opcao_adm){
                     case 1:
-                        printf("=== Cadastrar novo investidor ===\n");
+                        cadastrar_usuario();
                         break;
                     case 2:
                         printf("=== Excluir investidor ===\n");
