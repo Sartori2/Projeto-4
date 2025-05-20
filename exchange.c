@@ -11,8 +11,8 @@ float valor_ripple = 12.00;
 
 
 struct usuario usuarios[10] = {
-    {"1234567890", "12345"},
-    {"9876543211", "54321"}
+    {"Renan Sartori", "1234567890", "12345", {0}},  
+    {"Rafael Almeida", "9876543210", "54321", {0}}
 };
 
 int totalUsuarios = 2;
@@ -145,6 +145,48 @@ int consultar_extrato(char* cpf){
         printf("%s", linha);
     }
     fclose(file);
+    return 1;
+}
+
+int consultar_investidor(){
+    char cpf[12];
+    Saldos saldos;
+    
+    printf("Digite o CPF do investidor: ");
+    scanf("%11s", cpf);
+    int c;
+    while((c = getchar()) != '\n' && c != EOF);
+
+    int encontrado = -1;
+    for(int i = 0; i < totalUsuarios; i++){
+        if(strcmp(usuarios[i].cpf, cpf) == 0){
+            encontrado = i;
+            break;
+        }
+    }
+
+    if(encontrado == -1){
+        printf("CPF não encontrado\n");
+        printf("CPFs cadastrados:\n");
+        for(int i = 0; i < totalUsuarios; i++){
+            printf("- %s (%s)\n", usuarios[i].cpf, usuarios[i].nome);
+        }
+        return 0;
+    }
+
+    if(!carregar_users(cpf, &saldos)){
+        printf("Erro ao carregar os saldos.\n");
+        return 0;
+    }
+
+    printf("\n=== Dados do investidor ===\n");
+    printf("Nome: %s\n", usuarios[encontrado].nome);
+    printf("CPF: %s\n", usuarios[encontrado].cpf);
+    printf("\n=== Saldos ===\n");
+    printf("Reais: R$ %.2f\n", saldos.reais);
+    printf("Bitcoin: %.7f\n", saldos.bitcoin);
+    printf("Ethereum: %.7f\n", saldos.ethereum);
+    printf("Ripple: %.7f\n", saldos.ripple);
     return 1;
 }
 
@@ -500,7 +542,7 @@ int menu_admin(){
     printf("========= Admin ========\n");
     printf("1. Cadastrar novo investidor\n");
     printf("2. Excluir investidor\n");
-    printf("3. Cadastrar nova criptomoeda\n");
+    printf("3. Consultar saldo do investidor\n");
     printf("4. Sair\n");
     printf("Escolha uma opção: ");
     scanf("%d", &opcao);

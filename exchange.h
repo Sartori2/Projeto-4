@@ -29,6 +29,7 @@ int excluir_usuario();
 int carregar_users(char* cpf, Saldos* saldos);
 int salvar_users(char* cpf, Saldos* saldos);
 int consultar_extrato(char* cpf);
+int consultar_investidor();
 int depositar(Saldos* saldos, char* cpf);
 char* validar_senha(char* cpf);
 int sacar(char* senha_usuario, Saldos* saldos, char* cpf);

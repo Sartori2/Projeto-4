@@ -25,7 +25,7 @@ int main(){
                         excluir_usuario();
                         break;
                     case 3:
-                        printf("=== Cadastrar nova criptomoeda ===\n");
+                        consultar_investidor();
                         break;
                     case 4:
                         printf("=== Fechando Programa ===\n");
