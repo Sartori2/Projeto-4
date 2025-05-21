@@ -71,19 +71,57 @@ int main(){
                     depositar(&saldos, cpf);
                     break;
                 case 4: {
-                    char* senha_usuario = validar_senha(cpf);
-                    if(senha_usuario == NULL){
-                        printf("Usuario não encontrado\n");
+                    char nomes[10][20];
+                    float cotacoes[10];
+                    int total = carregar_criptos(nomes, cotacoes, 10);
+                    if (total == 0){
+                        printf("= Nenhuma criptomoeda cadastrada\n");
                         break;
                     }
-                  
-                    sacar(senha_usuario, &saldos, cpf);
-                    break;
+                    
+                    printf("\n=== Comprar Criptomoedas ===\n");
+                    for (int i = 0; i < total; i++) {
+                        printf("%d: %s - Cotacao: R$ %.2f\n", i + 1, nomes[i], cotacoes[i]);
+                    }
+
+                    int escolha;
+                    printf("= Escolha uma criptomoeda: ");
+                    scanf("%d", &escolha);
+                    if (escolha < 1 || escolha > total) {
+                        printf("= Opção inválida.\n");
+                        break;
+                    }
+
+                    comprar(nomes[escolha - 1], cotacoes[escolha - 1], &saldos, cpf);
+
                 }  
-        
+                break;
                 case 5:
-                    comprar_criptomoedas(&saldos, cpf);
-                    break;
+                {
+                    char nomes[10][20];
+                    float cotacoes[10];
+                    int total = carregar_criptos(nomes, cotacoes, 10);
+                    if (total == 0){
+                        printf("= Nenhuma criptomoeda cadastrada\n");
+                        break;
+                    }
+                    
+                    printf("\n=== Vender Criptomoedas ===\n");
+                    for (int i = 0; i < total; i++) {
+                        printf("%d: %s - Cotacao: R$ %.2f\n", i + 1, nomes[i], cotacoes[i]);
+                    }
+
+                    int escolha;
+                    printf("= Escolha uma criptomoeda: ");
+                    scanf("%d", &escolha);
+                    if (escolha < 1 || escolha > total) {
+                        printf("= Opção inválida.\n");
+                        break;
+                    }
+
+                    vender(nomes[escolha - 1], cotacoes[escolha - 1], &saldos, cpf);                    
+                }
+                break;
                 case 6:
                     vender_criptomoedas(&saldos, cpf);
                     break;

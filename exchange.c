@@ -29,6 +29,21 @@ float valor_ripple = 12.00;
 
 int totalUsuarios = 2;
 
+int carregar_criptos(char nomes[][20], float cotacoes[], int maximo){
+    FILE* file = fopen("criptos.txt", "r");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo de criptomoedas.\n");
+        return 0;
+    }
+
+    int count = 0;
+    while (count < maximo && fscanf(file, "%s %f", nomes[count], &cotacoes[count]) == 2) {
+        count++;
+    }
+    fclose(file);
+    return count;
+}
+
 int carregar_users(char* cpf, Saldos* saldos) {
     char filename[20];
     sprintf(filename, "CPF_%s.txt", cpf);

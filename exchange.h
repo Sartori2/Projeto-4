@@ -67,6 +67,7 @@ void adicionar_extrato(char cpf[], char descricao[]);
 void extrato_investidor(char cpf[]);
 
 // Sistema
+int carregar_criptos(char nomes[][20], float cotacoes[], int maximo);
 int carregar_users(char* cpf, Saldos* saldos);
 int salvar_users(char* cpf, Saldos* saldos);
 char* validar_senha(char* cpf);
