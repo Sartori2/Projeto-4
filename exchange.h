@@ -1,5 +1,20 @@
 #ifndef EXCHANGE_H
 #define EXCHANGE_H
+#define MAX_USUARIOS 100
+#define MAX_EXTRATOS 100
+#define MAX_CRIPTOS 10
+
+typedef struct{
+    char nome[20];
+    float valor;
+} Criptomoeda;
+
+typedef struct{
+    char data[20];
+    char tipo[10]; // "compra" ou "venda"
+    float valor;
+    float quantidade;
+} Extrato;
 
 typedef struct Saldos {
     float reais;
@@ -8,17 +23,28 @@ typedef struct Saldos {
     float ripple;
 } Saldos;
 
-struct usuario {
+typedef struct usuario {
     char nome[50];
     char cpf[12];
     char senha[7];
     Saldos saldos;
-};
+} Usuario;
 
-struct admin {
+typedef struct admin {
     char cpf[12];
     char senha[7];
-};
+} Admin;
+
+extern Usuario usuarios[MAX_USUARIOS];
+extern Admin admin;
+extern float valor_bitcoin;
+extern float valor_ethereum;
+extern float valor_ripple;
+extern int totalUsuarios;
+extern Criptomoeda criptomoedas[MAX_CRIPTOS];
+extern int totalCriptos;
+extern Extrato extratos[MAX_EXTRATOS];
+extern int totalExtratos;
 
 
 // Investidor
@@ -35,8 +61,10 @@ int login_admin();
 int menu_admin();
 int cadastrar_usuario();
 int excluir_usuario();
-int consultar_investidor();
+int saldo_investidor();
 void atualizar_cotacao();
+void cadastrar_criptomoeda();
+
 
 // Sistema
 int carregar_users(char* cpf, Saldos* saldos);

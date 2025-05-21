@@ -5,10 +5,26 @@
 #include <time.h>
 #define BANCO_USUARIOS "usuarios.txt"
 
-struct usuario usuarios[10] = {
+Usuario usuarios[MAX_USUARIOS];
+float valor_bitcoin;
+float valor_ethereum;
+float valor_ripple;
+int totalUsuarios;
+
+struct usuario usuarios[MAX_USUARIOS] = {
     {"Renan Sartori", "1234567890", "12345", {0}},  
     {"Rafael Almeida", "9876543210", "54321", {0}}
 };
+
+Admin admin = {
+    "12398745605",
+    "23456"
+};
+
+Criptomoeda criptos[MAX_CRIPTOS];
+int totalCriptos = 0;
+
+
 
 float valor_bitcoin = 500000.00;
 float valor_ethereum = 10000.00;
@@ -348,6 +364,25 @@ int vender_criptomoedas(Saldos* saldos, char* cpf) {
     printf("Venda realizada com sucesso: R$ %.2f.\n", valor_reais);
     printf("Novo saldo de Reais: R$ %.2f.\n", saldos->reais);
     return 1;
+}
+
+void cadastrar_criptomoeda() {
+    printf("\n");
+    printf("======== Cadastrar Criptomoeda ========\n");
+    if (totalCriptos >= MAX_CRIPTOS) {
+        printf("Limite de criptomoedas atingido.\n");
+        return;
+    }
+
+    printf("= Digite o nome da criptomoeda que deseja adicionar: ");
+    scanf("%s", criptos[totalCriptos].nome);
+
+    printf("Digite o valor da criptomoeda, em R$: ");
+    scanf("%f", &criptos[totalCriptos].valor);
+
+    printf("\n=== Criptomoeda %s cadastrada com sucesso! ===\n", criptos[totalCriptos].nome);
+    totalCriptos++;
+
 }
 
 int menu(){

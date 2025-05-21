@@ -1,22 +1,8 @@
 #include "exchange.h"
 #include <stdio.h>
 #include <string.h>
-
-struct usuario usuarios[10] = {
-    {"Renan Sartori", "1234567890", "12345", {0}},  
-    {"Rafael Almeida", "9876543210", "54321", {0}}
-};
-
-struct admin admin = {
-    "12398745605",
-    "23456"
-};
-
-int totalUsuarios = 2;
-
-float valor_bitcoin = 500000.00;
-float valor_ethereum = 10000.00;
-float valor_ripple = 12.00;
+#include <time.h>
+#include <stdlib.h>
 
 int login_admin(){
     char cpf[12];
@@ -28,13 +14,13 @@ int login_admin(){
 
     printf("= Senha: ");
     scanf(" %s", senha);
-    if(strcmp(admin.cpf, cpf) == 0 &&
-        strcmp(admin.senha, senha) == 0){
-            printf("= Login concluído com sucesso =\n");
-            return 1;
+    if(strcmp(admin.cpf, cpf) == 0 && strcmp(admin.senha, senha) == 0){
+        printf("= Login concluído com sucesso =\n");
+        return 1;
+    } else{
+        printf("= Login inválido =\n");
+        return -1;
     }
-    printf("= Login inválido =\n");
-    return -1;
 }
 
 int menu_admin(){
@@ -42,11 +28,12 @@ int menu_admin(){
     printf("\n======== Menu Admin =======\n");
     printf("1: Cadastrar Investidor\n");
     printf("2: Remover Investidor\n");
-    printf("3: Listar Investidores\n");
-    printf("4: Atualizar Cotação\n");
+    printf("3: Cadastrar Criptomoeda\n");
+    printf("4: Excluir Criptomoeda\n");
     printf("5: Ver saldo de investidor\n");
     printf("6: Ver extrato de investidor\n");
-    printf("7: Sair\n");
+    printf("7: Atualizar Cotação\n");
+    printf("8: Sair\n");
     printf("Escolha uma opcao: ");
     scanf("%d", &opcao);
     return opcao;
@@ -172,7 +159,7 @@ void atualizar_cotacao(){
     printf("Ripple: %.2f\n", valor_ripple);
 }
 
-int consultar_investidor(){
+int saldo_investidor(){
     char cpf[12];
     Saldos saldos;
     
@@ -215,7 +202,7 @@ int consultar_investidor(){
 }
 
 int main(){
-    if(!login_adm()){
+    if(!login_admin()){
         return 1;
     }
 
@@ -225,7 +212,7 @@ int main(){
     Saldos saldos;
 
     do{
-        opcao = menu_adm();
+        opcao = menu_admin();
 
         switch (opcao){
             case 1:
@@ -240,42 +227,30 @@ int main(){
                 printf("\n=== Remover Investidor ===\n");
                 printf("= Digite o CPF: ");
                 scanf("%s", cpf);
-                // Implementar função de remoção
+                excluir_usuario(cpf);
                 break;
             case 3:
-                printf("\n=== Listar Investidores ===\n");
-                // Implementar função de listagem
+                cadastrar_criptomoeda();
                 break;
             case 4:
-                atualizar_cotacao();
+                printf("\n=== Excluir Criptomoeda ===\n");
+                // Implementar função de excluir cripto
                 break;
             case 5:
-                printf("\n=== Ver saldo de investidor ===\n");
-                printf("= Digite o CPF: ");
-                scanf("%s", cpf);
-                if (carregar_users(cpf, &saldos)){
-                    printf("= Saldo de %s:\n", cpf);
-                    printf("= Reais: %.2f\n", saldos.reais);
-                    printf("= Bitcoin: %.7f\n", saldos.bitcoin);
-                    printf("= Ethereum: %.7f\n", saldos.ethereum);
-                    printf("= Ripple: %.7f\n", saldos.ripple);
-            } else {
-                    printf("= Investidor não encontrado\n");
-                }
+                saldo_investidor();
                 break;
             case 6:
-                printf("\n=== Ver extrato de investidor ===\n");
-                printf("= Digite o CPF: ");
-                scanf("%s", cpf);
-                consultar_extrato(cpf);
                 break;
             case 7:
+                atualizar_cotacao();
+                break;
+            case 8:
                 printf("\n === Fechando Programa ===\n");
                 break;
             default:
                 printf("= Opcao invalida\n");
         }
-    } while(opcao != 7);
+    } while(opcao != 8);
 
     return 0;
 }

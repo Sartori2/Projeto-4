@@ -4,23 +4,23 @@
 Este é um programa de console simples para gerenciar um sistema de troca de criptomoedas. Ele permite que os usuários realizem operações de depósito, saque, compra e venda de criptomoedas, e consulte seus saldos e extratos. O sistema mantém os dados do usuário em arquivos de texto, garantindo que as informações sejam persistidas entre as execuções do programa.
 
 Funcionalidades
-O programa permite as seguintes operações:
+    O programa permite as seguintes operações:
 
-Login: O usuário faz login com seu CPF e senha.
+        Login: O usuário faz login com seu CPF e senha.
 
-Consultar Saldo: Verifique o saldo atual em reais e criptomoedas (Bitcoin, Ethereum, Ripple).
+        Consultar Saldo: Verifique o saldo atual em reais e criptomoedas (Bitcoin, Ethereum, Ripple).
 
-Consultar Extrato: Consulte as transações realizadas, como depósitos, saques e compras/vendas de criptomoedas.
+        Consultar Extrato: Consulte as transações realizadas, como depósitos, saques e compras/vendas de criptomoedas.
 
-Depositar Reais: Deposite reais na conta do usuário.
+        Depositar Reais: Deposite reais na conta do usuário.
 
-Sacar Reais: Realize um saque de reais da conta do usuário.
+        Sacar Reais: Realize um saque de reais da conta do usuário.
 
-Comprar Criptomoedas: Compre Bitcoin, Ethereum ou Ripple usando reais.
+        Comprar Criptomoedas: Compre Bitcoin, Ethereum ou Ripple usando reais.
 
-Vender Criptomoedas: Venda suas criptomoedas e converta de volta para reais.
+        Vender Criptomoedas: Venda suas criptomoedas e converta de volta para reais.
 
-Atualizar Cotação: Atualize as cotações das criptomoedas (com uma variação aleatória de -5% a +5%).
+        Atualizar Cotação: Atualize as cotações das criptomoedas (com uma variação aleatória de -5% a +5%).
 
 Sair: Encerre o programa.
 
