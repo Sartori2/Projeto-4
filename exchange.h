@@ -20,21 +20,27 @@ struct admin {
     char senha[7];
 };
 
-int login_admin();
+
+// Investidor
 int login(char* cpf_out);
-int menu_admin();
 int menu();
-int cadastrar_usuario();
-int excluir_usuario();
-int carregar_users(char* cpf, Saldos* saldos);
-int salvar_users(char* cpf, Saldos* saldos);
 int consultar_extrato(char* cpf);
-int consultar_investidor();
-int depositar(Saldos* saldos, char* cpf);
-char* validar_senha(char* cpf);
-int sacar(char* senha_usuario, Saldos* saldos, char* cpf);
 int comprar_criptomoedas(Saldos* saldos, char* cpf);
 int vender_criptomoedas(Saldos* saldos, char* cpf);
+int depositar(Saldos* saldos, char* cpf);
+int sacar(char* senha_usuario, Saldos* saldos, char* cpf);
+
+// Admin
+int login_admin();
+int menu_admin();
+int cadastrar_usuario();
+int excluir_usuario();
+int consultar_investidor();
 void atualizar_cotacao();
+
+// Sistema
+int carregar_users(char* cpf, Saldos* saldos);
+int salvar_users(char* cpf, Saldos* saldos);
+char* validar_senha(char* cpf);
 
 #endif
