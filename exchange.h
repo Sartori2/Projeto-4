@@ -10,10 +10,8 @@ typedef struct{
 } Criptomoeda;
 
 typedef struct{
-    char data[20];
-    char tipo[10]; // "compra" ou "venda"
-    float valor;
-    float quantidade;
+    char cpf[12];
+    char descricao[100]; // "compra" ou "venda"
 } Extrato;
 
 typedef struct Saldos {
@@ -65,6 +63,8 @@ int saldo_investidor();
 void atualizar_cotacao();
 void cadastrar_criptomoeda();
 void excluir_criptomoeda();
+void adicionar_extrato(char cpf[], char descricao[]);
+void extrato_investidor(char cpf[]);
 
 // Sistema
 int carregar_users(char* cpf, Saldos* saldos);

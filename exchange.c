@@ -6,10 +6,6 @@
 #define BANCO_USUARIOS "usuarios.txt"
 
 Usuario usuarios[MAX_USUARIOS];
-float valor_bitcoin;
-float valor_ethereum;
-float valor_ripple;
-int totalUsuarios;
 
 struct usuario usuarios[MAX_USUARIOS] = {
     {"Renan Sartori", "1234567890", "12345", {0}},  
@@ -17,14 +13,15 @@ struct usuario usuarios[MAX_USUARIOS] = {
 };
 
 Admin admin = {
-    "12398745605",
-    "23456"
+    .cpf = "12398745605",
+    .senha = "23456"
 };
 
 Criptomoeda criptos[MAX_CRIPTOS];
 int totalCriptos = 0;
 
-
+Extrato extratos[MAX_EXTRATOS];
+int totalExtratos = 0;
 
 float valor_bitcoin = 500000.00;
 float valor_ethereum = 10000.00;
@@ -81,7 +78,7 @@ int salvar_users(char* cpf, Saldos* saldos) {
     char filename[20];
     sprintf(filename, "CPF_%s.txt", cpf);
 
-    FILE* file = fopen(filename, "r+");
+    FILE* file = fopen(filename, "w");
     if (file == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return 0;
@@ -222,7 +219,7 @@ int sacar(char* senha_usuario, Saldos* saldos, char* cpf){
     char filename[30];
     sprintf(filename, "extrato_%s.txt", cpf);
     FILE* extrato = fopen(filename, "a");
-    fprintf(extrato, "Depósito: R$ %.2f\n", valor);
+    fprintf(extrato, "Saque: R$ %.2f\n", valor);
     fclose(extrato);
 
 
@@ -286,7 +283,10 @@ int comprar_criptomoedas(Saldos* saldos, char* cpf) {
     char filename[30];
     sprintf(filename, "extrato_%s.txt", cpf);
     FILE* extrato = fopen(filename, "a");
-    fprintf(extrato, "Depósito: R$ %.2f\n", valor);
+    fprintf(extrato, "Compra de %s: R$ %.2f (%s)\n", 
+    (opcoes == 1 ? "Bitcoin" : opcoes == 2 ? "Ethereum" : "Ripple"), 
+    preco, 
+    data_hora);
     fclose(extrato);
 
     printf("= Compra realizada com sucesso\n");
@@ -414,6 +414,25 @@ void excluir_criptomoeda() {
 
     totalCriptos--;
     printf("= Criptomoeda excluída com sucesso!\n");
+}
+
+void adicionar_extrato(char cpf[], char descricao[]) {
+    if (totalExtratos >= MAX_EXTRATOS) {
+        printf("= Limite de extratos atingido.\n");
+        return;
+    }
+
+    strcpy(extratos[totalExtratos].cpf, cpf);
+    strcpy(extratos[totalExtratos].descricao, descricao);
+}
+
+void extrato_investidor(char cpf[]) {
+    printf("\n======== Extrato ========\n");
+    for (int i = 0; i < totalExtratos; i++) {
+        if (strcmp(extratos[i].cpf, cpf) == 0) {
+            printf("%s\n", extratos[i].descricao);
+        }
+    }
 }
 
 int menu(){

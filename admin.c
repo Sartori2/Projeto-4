@@ -239,6 +239,7 @@ int main(){
                 saldo_investidor();
                 break;
             case 6:
+                extrato_investidor(cpf);
                 break;
             case 7:
                 atualizar_cotacao();
