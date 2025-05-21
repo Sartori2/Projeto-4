@@ -64,7 +64,7 @@ int excluir_usuario();
 int saldo_investidor();
 void atualizar_cotacao();
 void cadastrar_criptomoeda();
-
+void excluir_criptomoeda();
 
 // Sistema
 int carregar_users(char* cpf, Saldos* saldos);

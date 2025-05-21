@@ -233,8 +233,7 @@ int main(){
                 cadastrar_criptomoeda();
                 break;
             case 4:
-                printf("\n=== Excluir Criptomoeda ===\n");
-                // Implementar função de excluir cripto
+                excluir_criptomoeda();
                 break;
             case 5:
                 saldo_investidor();

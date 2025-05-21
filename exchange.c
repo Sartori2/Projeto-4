@@ -385,6 +385,37 @@ void cadastrar_criptomoeda() {
 
 }
 
+void excluir_criptomoeda() {
+    printf("\n");
+    printf("======== Excluir Criptomoeda ========\n");
+
+    if (totalCriptos == 0) {
+        printf("= Nenhuma criptomoeda cadastrada.\n");
+        return;
+    }
+
+    printf("= Criptomoedas cadastradas:\n");
+    for (int i = 0; i < totalCriptos; i++) {
+        printf("%d: %s (R$ %.2f)\n", i + 1, criptos[i].nome, criptos[i].valor);
+    }
+
+    int escolha;
+    printf("= Escolha a criptomoeda que deseja excluir: ");
+    scanf("%d", &escolha);
+
+    if (escolha < 1 || escolha > totalCriptos) {
+        printf("= Opção inválida.\n");
+        return;
+    }
+
+    for (int i = escolha - 1; i < totalCriptos - 1; i++) {
+        criptos[i] = criptos[i + 1];
+    }
+
+    totalCriptos--;
+    printf("= Criptomoeda excluída com sucesso!\n");
+}
+
 int menu(){
     int opcao;
     printf("\n");
