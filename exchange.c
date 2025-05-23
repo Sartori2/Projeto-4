@@ -222,14 +222,14 @@ int sacar(char* senha_usuario, Saldos* saldos, char* cpf){
         printf("= Saldo insuficiente\n");
         return 0;
     }
-    
+
     saldos->reais -= valor;
 
     if (!salvar_users(cpf, saldos)) {
         printf("Erro ao salvar os dados do usuário.\n");
         return 0;
     }
-    
+
 
     char filename[30];
     sprintf(filename, "extrato_%s.txt", cpf);
@@ -379,90 +379,4 @@ int vender_criptomoedas(Saldos* saldos, char* cpf) {
     printf("Venda realizada com sucesso: R$ %.2f.\n", valor_reais);
     printf("Novo saldo de Reais: R$ %.2f.\n", saldos->reais);
     return 1;
-}
-
-void cadastrar_criptomoeda() {
-    printf("\n");
-    printf("======== Cadastrar Criptomoeda ========\n");
-    if (totalCriptos >= MAX_CRIPTOS) {
-        printf("Limite de criptomoedas atingido.\n");
-        return;
-    }
-
-    printf("= Digite o nome da criptomoeda que deseja adicionar: ");
-    scanf("%s", criptos[totalCriptos].nome);
-
-    printf("Digite o valor da criptomoeda, em R$: ");
-    scanf("%f", &criptos[totalCriptos].valor);
-
-    printf("\n=== Criptomoeda %s cadastrada com sucesso! ===\n", criptos[totalCriptos].nome);
-    totalCriptos++;
-
-}
-
-void excluir_criptomoeda() {
-    printf("\n");
-    printf("======== Excluir Criptomoeda ========\n");
-
-    if (totalCriptos == 0) {
-        printf("= Nenhuma criptomoeda cadastrada.\n");
-        return;
-    }
-
-    printf("= Criptomoedas cadastradas:\n");
-    for (int i = 0; i < totalCriptos; i++) {
-        printf("%d: %s (R$ %.2f)\n", i + 1, criptos[i].nome, criptos[i].valor);
-    }
-
-    int escolha;
-    printf("= Escolha a criptomoeda que deseja excluir: ");
-    scanf("%d", &escolha);
-
-    if (escolha < 1 || escolha > totalCriptos) {
-        printf("= Opção inválida.\n");
-        return;
-    }
-
-    for (int i = escolha - 1; i < totalCriptos - 1; i++) {
-        criptos[i] = criptos[i + 1];
-    }
-
-    totalCriptos--;
-    printf("= Criptomoeda excluída com sucesso!\n");
-}
-
-void adicionar_extrato(char cpf[], char descricao[]) {
-    if (totalExtratos >= MAX_EXTRATOS) {
-        printf("= Limite de extratos atingido.\n");
-        return;
-    }
-
-    strcpy(extratos[totalExtratos].cpf, cpf);
-    strcpy(extratos[totalExtratos].descricao, descricao);
-}
-
-void extrato_investidor(char cpf[]) {
-    printf("\n======== Extrato ========\n");
-    for (int i = 0; i < totalExtratos; i++) {
-        if (strcmp(extratos[i].cpf, cpf) == 0) {
-            printf("%s\n", extratos[i].descricao);
-        }
-    }
-}
-
-int menu(){
-    int opcao;
-    printf("\n");
-    printf("========= Menu ========\n");
-    printf("1: Consultar Saldo\n");
-    printf("2: Consultar Extrato\n");
-    printf("3: Depositar Reais\n");
-    printf("4: Sacar Reais\n");
-    printf("5: Comprar Criptomoedas\n");
-    printf("6: Vender Criptomoedas\n");
-    printf("7: Atualizar Cotação\n");
-    printf("8: Sair\n");
-    printf("Escolha uma opção: ");
-    scanf("%d", &opcao);
-    return opcao;
 }

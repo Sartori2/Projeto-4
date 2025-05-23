@@ -1,5 +1,0 @@
-CPF: 1234567890
-Reais: 0.00
-Bitcoin: 0.0000000
-Ethereum: 0.0000000
-Ripple: 0.0000000

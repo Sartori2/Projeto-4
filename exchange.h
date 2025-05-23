@@ -39,11 +39,10 @@ extern float valor_bitcoin;
 extern float valor_ethereum;
 extern float valor_ripple;
 extern int totalUsuarios;
-extern Criptomoeda criptomoedas[MAX_CRIPTOS];
+extern Criptomoeda criptos[MAX_CRIPTOS];
 extern int totalCriptos;
 extern Extrato extratos[MAX_EXTRATOS];
 extern int totalExtratos;
-
 
 // Investidor
 int login(char* cpf_out);
