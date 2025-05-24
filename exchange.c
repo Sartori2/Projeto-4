@@ -176,7 +176,7 @@ int login(char* cpf_out){
 
 int consultar_extrato(char* cpf){
     char filename[30];
-    sprintf(filename, "CPF_%s.txt", cpf);
+    sprintf(filename, "extrato_%s.txt", cpf);
 
     FILE* file = fopen(filename, "r");
     if(file == NULL){
