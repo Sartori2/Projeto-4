@@ -1,5 +1,18 @@
 #ifndef EXCHANGE_H
 #define EXCHANGE_H
+#define MAX_USUARIOS 100
+#define MAX_EXTRATOS 100
+#define MAX_CRIPTOS 10
+
+typedef struct{
+    char nome[20];
+    float valor;
+} Criptomoeda;
+
+typedef struct{
+    char cpf[12];
+    char descricao[100];
+} Extrato;
 
 typedef struct Saldos {
     float reais;
@@ -8,22 +21,59 @@ typedef struct Saldos {
     float ripple;
 } Saldos;
 
-struct usuario {
+typedef struct usuario {
+    char nome[50];
     char cpf[12];
     char senha[7];
     Saldos saldos;
-};
+} Usuario;
 
+typedef struct admin {
+    char cpf[12];
+    char senha[7];
+} Admin;
+
+// Variáveis globais
+extern Usuario usuarios[MAX_USUARIOS];
+extern Admin admin;
+extern float valor_bitcoin;
+extern float valor_ethereum;
+extern float valor_ripple;
+extern int totalUsuarios;
+extern Criptomoeda criptos[MAX_CRIPTOS];
+extern int totalCriptos;
+extern Extrato extratos[MAX_EXTRATOS];
+extern int totalExtratos;
+
+// Investidor
 int login(char* cpf_out);
 int menu();
-int carregar_users(char* cpf, Saldos* saldos);
-int salvar_users(char* cpf, Saldos* saldos);
 int consultar_extrato(char* cpf);
-int depositar(Saldos* saldos, char* cpf);
-char* validar_senha(char* cpf);
-int sacar(char* senha_usuario, Saldos* saldos, char* cpf);
 int comprar_criptomoedas(Saldos* saldos, char* cpf);
 int vender_criptomoedas(Saldos* saldos, char* cpf);
+int depositar(Saldos* saldos, char* cpf);
+int sacar(char* senha_usuario, Saldos* saldos, char* cpf);
+
+// Admin
+int login_admin();
+int menu_admin();
+int cadastrar_usuario();
+int excluir_usuario();
+int saldo_investidor();
 void atualizar_cotacao();
+void cadastrar_criptomoeda();
+void excluir_criptomoeda();
+void adicionar_extrato(char cpf[], char descricao[]);
+void extrato_investidor(char cpf[]);
+
+// Sistema de saldos
+int carregar_criptos(char nomes[][20], float cotacoes[], int maximo);
+int carregar_users(char* cpf, Saldos* saldos);
+int salvar_users(char* cpf, Saldos* saldos);
+char* validar_senha(char* cpf);
+
+// Sistema de usuários (nome, CPF, senha)
+int carregar_todos_users();
+int salvar_todos_users();
 
 #endif
