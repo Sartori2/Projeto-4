@@ -23,7 +23,7 @@ Este projeto é um sistema de console em C para gerenciamento de uma exchange de
 # Estrutura de Arquivos
 O programa usa arquivos de texto para guardar as informações dos usuários. Para cada usuário, um arquivo no formato CPF_(cpf).txt é criado, e conforme o uso de depositos, saques e compras um novo arquivo no formato extrato_(cpf).txt é criado exibindo todos os dados de uso.
 
-Para ter um investidor é preciso criar um, primeiro passo é entrar no Menu Administrador utilizando o login e senha abaixo, em seguida digite 1 para Cadastrar Investidor, o sistema solicitará o nome, cpf e uma senha, tendo assim um acesso pelo menu de Investidor.
+Para ter um investidor é preciso criar um, primeiro passo é entrar no Menu Administrador utilizando o login e senha abaixo, em seguida digite 1 para Cadastrar Investidor, o sistema solicitará o nome, cpf e uma senha, tendo assim um acesso com login e senha ao menu de Investidor automaticamente.
 
     CPF: 54648618823
     Senha: rafis
