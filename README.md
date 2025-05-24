@@ -32,16 +32,16 @@ Para ter um investidor é preciso criar um, primeiro passo é entrar no Menu Adm
 É recomendado utilizar o [replit.](https://replit.com/) como ferramenta. Crie os arquivos com o mesmo nome e coloque exatamente tudo o que está dentro do projeto. Depois, clique nos três pontos ao lado de "Files" e, em seguida, em "Show Hidden Files". Alguns arquivos ocultos irão aparecer. Se não existir o arquivo Makefile, crie um e coloque o código abaixo:
 
 
-all: admin investidor
-
-admin: admin.c exchange.c
-	gcc admin.c exchange.c -o admin
-
-investidor: investidor.c exchange.c
-	gcc investidor.c exchange.c -o investidor
-
-clean:
-	rm -f admin investidor
+	all: admin investidor
+	
+	admin: admin.c exchange.c
+		gcc admin.c exchange.c -o admin
+	
+	investidor: investidor.c exchange.c
+		gcc investidor.c exchange.c -o investidor
+	
+	clean:
+		rm -f admin investidor
 
 
 Para definir qual programa você quer rodar (Investidor ou Administrador), abra o arquivo .replit e altere a linha do "run", que provavelmente estará como (run = "./main"), para (run = "./admin" ou run = "./investidor"). Agora na linha abaixo, modifique o entrypoint para (entrypoint = "admin.c" ou entrypoint = "investidor.c").
