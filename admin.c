@@ -1,17 +1,19 @@
 #include "exchange.h"
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 #include <stdlib.h>
+#include <time.h>
 
 int login_admin(){
     char cpf[12];
     char senha[7];
-
+    
     printf("==== Admin ====\n");
     printf("= CPF: ");
-    scanf("%s", cpf);
-
+    if (scanf("%s", cpf) != 1) {
+        printf("Erro ao ler o CPF.\n");
+        return 0;
+    }
     printf("= Senha: ");
     scanf(" %s", senha);
     if(strcmp(admin.cpf, cpf) == 0 && strcmp(admin.senha, senha) == 0){
@@ -19,7 +21,7 @@ int login_admin(){
         return 1;
     } else{
         printf("= Login inválido =\n");
-        return -1;
+        exit(1);
     }
 }
 
@@ -39,43 +41,66 @@ int menu_admin(){
     return opcao;
 }
 
-
-int cadastrar_usuario(){
+int cadastrar_usuario() {
     struct usuario novo_usuario;
     int c;
-    while((c = getchar()) != '\n' && c != EOF);
+    while ((c = getchar()) != '\n' && c != EOF); 
     printf("Digite o nome do investidor: ");
-    fgets(novo_usuario.nome, 50, stdin);
+    if (fgets(novo_usuario.nome, 50, stdin) == NULL) {
+        printf("Erro ao ler o nome.\n");
+        return 0;
+    }
     novo_usuario.nome[strcspn(novo_usuario.nome, "\n")] = '\0';
+    if (strchr(novo_usuario.nome, ';') != NULL) {
+        printf("Erro: O nome não pode conter o caractere ';'.\n");
+        return 0;
+    }
     printf("Digite o CPF do investidor: ");
-    scanf("%11s", novo_usuario.cpf);
-    
-    for(int i = 0; i < totalUsuarios; i++){
-        if(strcmp(usuarios[i].cpf, novo_usuario.cpf) == 0){
+    if (scanf("%11s", novo_usuario.cpf) != 1) {
+        printf("Erro ao ler o CPF.\n");
+        return 0;
+    }
+    if (strlen(novo_usuario.cpf) != 11 || !strspn(novo_usuario.cpf, "0123456789")) {
+        printf("CPF inválido. Deve conter 11 dígitos numéricos.\n");
+        return 0;
+    }
+
+    for (int i = 0; i < totalUsuarios; i++) {
+        if (strcmp(usuarios[i].cpf, novo_usuario.cpf) == 0) {
             printf("CPF já cadastrado\n");
             return 0;
         }
     }
 
+    while ((c = getchar()) != '\n' && c != EOF); 
     printf("Digite a senha do investidor: ");
-    scanf("%6s", novo_usuario.senha);
+    if (scanf("%6s", novo_usuario.senha) != 1) {
+        printf("Erro ao ler a senha.\n");
+        return 0;
+    }
 
     novo_usuario.saldos.reais = 0;
     novo_usuario.saldos.bitcoin = 0;
     novo_usuario.saldos.ethereum = 0;
     novo_usuario.saldos.ripple = 0;
 
-    if(totalUsuarios < 10){
+    if (totalUsuarios < 10) {
         usuarios[totalUsuarios] = novo_usuario;
         totalUsuarios++;
+
+        if (!salvar_todos_users()) {
+            printf("Erro ao salvar os dados dos usuários.\n");
+            return 0;
+        }
+
         char filename[20];
         sprintf(filename, "CPF_%s.txt", novo_usuario.cpf);
         FILE* file = fopen(filename, "w");
-        if(file == NULL){
+        if (file == NULL) {
             printf("Erro ao criar o arquivo.\n");
             return 0;
         }
-        
+
         fprintf(file, "Nome: %s\n", novo_usuario.nome);
         fprintf(file, "CPF: %s\n", novo_usuario.cpf);
         fprintf(file, "Reais: 0.00\n");
@@ -83,10 +108,21 @@ int cadastrar_usuario(){
         fprintf(file, "Ethereum: 0.0000000\n");
         fprintf(file, "Ripple: 0.0000000\n");
         fclose(file);
-        printf("Investidor cadastrado\n");
+
+        printf("= Investidor cadastrado com sucesso!\n");
+
+        char cpf_out[12];
+        printf("\n=== Validando login do investidor ===\n");
+        while ((c = getchar()) != '\n' && c != EOF); 
+        if (login(cpf_out) == 1 && strcmp(cpf_out, novo_usuario.cpf) == 0) {
+            printf("= Validação de login bem-sucedida para o CPF %s!\n", cpf_out);
+        } else {
+            printf("= Falha na validação de login para o CPF %s.\n", novo_usuario.cpf);
+        }
+
         return 1;
-    }else{
-        printf("Limite de usuários atingido\n");
+    } else {
+        printf("= Limite de usuários atingido.\n");
         return 0;
     }
 }
@@ -107,7 +143,7 @@ int excluir_usuario(){
     }
 
     if(encontrado == -1){
-        printf("CPF não encontrado\n", cpf);
+        printf("CPF não encontrado\n");
         printf("CPF cadastrados:\n");
         for(int i = 0; i < totalUsuarios; i++){
             printf("- %s\n", usuarios[i].cpf);
@@ -118,7 +154,7 @@ int excluir_usuario(){
     printf("\n=== Dados do Investidor ===\n");
     printf("Nome: %s\n", usuarios[encontrado].nome);
     printf("CPF: %s\n", usuarios[encontrado].cpf);
-    
+
     char confirmar;
     printf("CONFIRMAÇÃO - Digite (s/n) para excluir: ");
     scanf(" %c", &confirmar);
@@ -141,28 +177,12 @@ int excluir_usuario(){
     return 0;
 }
 
-void atualizar_cotacao(){
-    srand(time(NULL));
 
-    float variacoes[3];
-    float* cotacoes[3] = {&valor_bitcoin, &valor_ethereum, &valor_ripple};
-
-    for(int i = 0; i < 3; i++){
-        float variacao = ((rand() % 11) - 5) / 100.0;  // -0.05 a +0.05
-        *cotacoes[i] *= (1 + variacao);
-    }
-
-    printf("\n======== Atualizar Cotação ========\n");
-    printf("Cotação atual:\n");
-    printf("Bitcoin: %.2f\n", valor_bitcoin);
-    printf("Ethereum: %.2f\n", valor_ethereum);
-    printf("Ripple: %.2f\n", valor_ripple);
-}
 
 int saldo_investidor(){
     char cpf[12];
     Saldos saldos;
-    
+
     printf("Digite o CPF do investidor: ");
     scanf("%11s", cpf);
     int c;
@@ -201,33 +221,89 @@ int saldo_investidor(){
     return 1;
 }
 
+void cadastrar_criptomoeda() {
+    printf("\n");
+    printf("======== Cadastrar Criptomoeda ========\n");
+    if (totalCriptos >= MAX_CRIPTOS) {
+        printf("Limite de criptomoedas atingido.\n");
+        return;
+    }
+
+    printf("= Digite o nome da criptomoeda que deseja adicionar: ");
+    scanf("%s", criptos[totalCriptos].nome);
+
+    printf("Digite o valor da criptomoeda, em R$: ");
+    scanf("%f", &criptos[totalCriptos].valor);
+
+    printf("\n=== Criptomoeda %s cadastrada com sucesso! ===\n", criptos[totalCriptos].nome);
+    totalCriptos++;
+
+}
+
+void excluir_criptomoeda() {
+    printf("\n");
+    printf("======== Excluir Criptomoeda ========\n");
+
+    if (totalCriptos == 0) {
+        printf("= Nenhuma criptomoeda cadastrada.\n");
+        return;
+    }
+
+    printf("= Criptomoedas cadastradas:\n");
+    for (int i = 0; i < totalCriptos; i++) {
+        printf("%d: %s (R$ %.2f)\n", i + 1, criptos[i].nome, criptos[i].valor);
+    }
+
+    int escolha;
+    printf("= Escolha a criptomoeda que deseja excluir: ");
+    scanf("%d", &escolha);
+
+    if (escolha < 1 || escolha > totalCriptos) {
+        printf("= Opção inválida.\n");
+        return;
+    }
+
+    for (int i = escolha - 1; i < totalCriptos - 1; i++) {
+        criptos[i] = criptos[i + 1];
+    }
+
+    totalCriptos--;
+    printf("= Criptomoeda excluída com sucesso!\n");
+}
+
+void adicionar_extrato(char cpf[], char descricao[]) {
+    if (totalExtratos >= MAX_EXTRATOS) {
+        printf("= Limite de extratos atingido.\n");
+        return;
+    }
+
+    strcpy(extratos[totalExtratos].cpf, cpf);
+    strcpy(extratos[totalExtratos].descricao, descricao);
+}
+
+void extrato_investidor(char cpf[]) {
+    printf("\n======== Extrato ========\n");
+    for (int i = 0; i < totalExtratos; i++) {
+        if (strcmp(extratos[i].cpf, cpf) == 0) {
+            printf("%s\n", extratos[i].descricao);
+        }
+    }
+}
+
 int main(){
+    carregar_todos_users();
     if(!login_admin()){
         return 1;
     }
-
     int opcao;
-    char cpf[12];
-    char senha[7];
-    Saldos saldos;
-
     do{
         opcao = menu_admin();
-
-        switch (opcao){
+        switch (opcao) {
             case 1:
-                printf("\n=== Cadastrar Investidor ===\n");
-                printf("= Digite o CPF: ");
-                scanf("%s", cpf);
-                printf("= Digite a senha: ");
-                scanf("%s", senha);
-                cadastrar_usuario(cpf, senha);
+                cadastrar_usuario();
                 break;
             case 2:
-                printf("\n=== Remover Investidor ===\n");
-                printf("= Digite o CPF: ");
-                scanf("%s", cpf);
-                excluir_usuario(cpf);
+                excluir_usuario();
                 break;
             case 3:
                 cadastrar_criptomoeda();
@@ -238,14 +314,18 @@ int main(){
             case 5:
                 saldo_investidor();
                 break;
-            case 6:
+            case 6:{
+                char cpf[12];
+                printf("Digite o CPF do investidor: ");
+                scanf("%11s", cpf);
                 extrato_investidor(cpf);
                 break;
+            }
             case 7:
                 atualizar_cotacao();
                 break;
             case 8:
-                printf("\n === Fechando Programa ===\n");
+                printf("\n=== Fechando Programa ===\n");
                 break;
             default:
                 printf("= Opcao invalida\n");

@@ -11,7 +11,7 @@ typedef struct{
 
 typedef struct{
     char cpf[12];
-    char descricao[100]; // "compra" ou "venda"
+    char descricao[100];
 } Extrato;
 
 typedef struct Saldos {
@@ -33,17 +33,17 @@ typedef struct admin {
     char senha[7];
 } Admin;
 
+// Variáveis globais
 extern Usuario usuarios[MAX_USUARIOS];
 extern Admin admin;
 extern float valor_bitcoin;
 extern float valor_ethereum;
 extern float valor_ripple;
 extern int totalUsuarios;
-extern Criptomoeda criptomoedas[MAX_CRIPTOS];
+extern Criptomoeda criptos[MAX_CRIPTOS];
 extern int totalCriptos;
 extern Extrato extratos[MAX_EXTRATOS];
 extern int totalExtratos;
-
 
 // Investidor
 int login(char* cpf_out);
@@ -66,10 +66,14 @@ void excluir_criptomoeda();
 void adicionar_extrato(char cpf[], char descricao[]);
 void extrato_investidor(char cpf[]);
 
-// Sistema
+// Sistema de saldos
 int carregar_criptos(char nomes[][20], float cotacoes[], int maximo);
 int carregar_users(char* cpf, Saldos* saldos);
 int salvar_users(char* cpf, Saldos* saldos);
 char* validar_senha(char* cpf);
+
+// Sistema de usuários (nome, CPF, senha)
+int carregar_todos_users();
+int salvar_todos_users();
 
 #endif

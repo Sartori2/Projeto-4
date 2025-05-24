@@ -7,14 +7,9 @@
 
 Usuario usuarios[MAX_USUARIOS];
 
-struct usuario usuarios[MAX_USUARIOS] = {
-    {"Renan Sartori", "1234567890", "12345", {0}},  
-    {"Rafael Almeida", "9876543210", "54321", {0}}
-};
-
 Admin admin = {
-    .cpf = "12398745605",
-    .senha = "23456"
+    .cpf = "54648618823",
+    .senha = "rafis"
 };
 
 Criptomoeda criptos[MAX_CRIPTOS];
@@ -27,7 +22,7 @@ float valor_bitcoin = 500000.00;
 float valor_ethereum = 10000.00;
 float valor_ripple = 12.00;
 
-int totalUsuarios = 2;
+int totalUsuarios = 0;
 
 int carregar_criptos(char nomes[][20], float cotacoes[], int maximo){
     FILE* file = fopen("criptos.txt", "r");
@@ -107,6 +102,53 @@ int salvar_users(char* cpf, Saldos* saldos) {
 
     fclose(file);
     return 1;
+}
+
+int salvar_todos_users() {
+    FILE* f = fopen("usuarios.txt", "w");
+    if (!f) {
+        printf("= Erro ao abrir o arquivo usuarios.txt para escrita\n");
+        return 0;
+    }
+    for (int i = 0; i < totalUsuarios; i++) {
+        fprintf(f, "%s;%s;%s\n", usuarios[i].nome, usuarios[i].cpf, usuarios[i].senha);
+    }
+    fflush(f);
+    fclose(f);
+    printf("= Usuários salvos com sucesso em usuarios.txt (%d usuários)\n", totalUsuarios);
+    return 1;
+}
+
+int carregar_todos_users() {
+    FILE* f = fopen("usuarios.txt", "r");
+    if (!f) {
+        printf("= Erro: Não foi possível abrir o arquivo usuarios.txt\n");
+        return 0;
+    }
+
+    totalUsuarios = 0;
+    char linha[100];
+    while (fgets(linha, sizeof(linha), f) != NULL) {
+        linha[strcspn(linha, "\n")] = '\0';
+        printf("= Linha lida: %s\n", linha);
+        if (sscanf(linha, "%49[^;];%11[^;];%6s", usuarios[totalUsuarios].nome, usuarios[totalUsuarios].cpf, usuarios[totalUsuarios].senha) == 3) {
+            usuarios[totalUsuarios].saldos.reais = 0;
+            usuarios[totalUsuarios].saldos.bitcoin = 0;
+            usuarios[totalUsuarios].saldos.ethereum = 0;
+            usuarios[totalUsuarios].saldos.ripple = 0;
+            totalUsuarios++;
+            printf("= Usuário carregado: %s (CPF: %s)\n", usuarios[totalUsuarios-1].nome, usuarios[totalUsuarios-1].cpf);
+        } else {
+            printf("= Erro: Formato inválido na linha: %s\n", linha);
+        }
+    }
+    fclose(f);
+    if (totalUsuarios == 0) {
+        printf("= Nenhum usuário carregado de usuarios.txt\n");
+    } else {
+        printf("= Total de usuários carregados: %d\n", totalUsuarios);
+    }
+    return totalUsuarios > 0 ? 1 : 0;
 }
 
 int login(char* cpf_out){
@@ -222,14 +264,14 @@ int sacar(char* senha_usuario, Saldos* saldos, char* cpf){
         printf("= Saldo insuficiente\n");
         return 0;
     }
-    
+
     saldos->reais -= valor;
 
     if (!salvar_users(cpf, saldos)) {
         printf("Erro ao salvar os dados do usuário.\n");
         return 0;
     }
-    
+
 
     char filename[30];
     sprintf(filename, "extrato_%s.txt", cpf);
@@ -240,7 +282,7 @@ int sacar(char* senha_usuario, Saldos* saldos, char* cpf){
 
     printf("\n");
     printf("===== Saque =====\n");
-    printf("= Saque realizado\n", valor);
+    printf("= Saque realizado: R$ %.2f\n", valor);    
     return 1;
 }
 
@@ -314,9 +356,9 @@ int vender_criptomoedas(Saldos* saldos, char* cpf) {
     float quantia;
 
     printf("\n======== Vender Criptomoedas ========\n");
-    printf("1: Bitcoin\n", valor_bitcoin);
-    printf("2: Ethereum\n", valor_ethereum);
-    printf("3: Ripple\n", valor_ripple);
+    printf("1: Bitcoin (R$ %.2f)\n", valor_bitcoin);
+    printf("2: Ethereum (R$ %.2f)\n", valor_ethereum);
+    printf("3: Ripple (R$ %.2f)\n", valor_ripple);
     printf("= Escolha uma opção: ");
     scanf("%d", &opcoes);
 
@@ -373,7 +415,7 @@ int vender_criptomoedas(Saldos* saldos, char* cpf) {
     char filename[30];
     sprintf(filename, "extrato_%s.txt", cpf);
     FILE* extrato = fopen(filename, "a");
-    fprintf(extrato, "Depósito: R$ %.2f\n", valor);
+    fprintf(extrato, "Venda: R$ %.2f (%s) \n", valor_reais, data_hora);
     fclose(extrato);
 
     printf("Venda realizada com sucesso: R$ %.2f.\n", valor_reais);
@@ -381,88 +423,20 @@ int vender_criptomoedas(Saldos* saldos, char* cpf) {
     return 1;
 }
 
-void cadastrar_criptomoeda() {
-    printf("\n");
-    printf("======== Cadastrar Criptomoeda ========\n");
-    if (totalCriptos >= MAX_CRIPTOS) {
-        printf("Limite de criptomoedas atingido.\n");
-        return;
+void atualizar_cotacao(){
+    srand(time(NULL));
+
+    float variacoes[3];
+    float* cotacoes[3] = {&valor_bitcoin, &valor_ethereum, &valor_ripple};
+
+    for(int i = 0; i < 3; i++){
+        float variacao = ((rand() % 11) - 5) / 100.0;  // -0.05 a +0.05
+        *cotacoes[i] *= (1 + variacao);
     }
 
-    printf("= Digite o nome da criptomoeda que deseja adicionar: ");
-    scanf("%s", criptos[totalCriptos].nome);
-
-    printf("Digite o valor da criptomoeda, em R$: ");
-    scanf("%f", &criptos[totalCriptos].valor);
-
-    printf("\n=== Criptomoeda %s cadastrada com sucesso! ===\n", criptos[totalCriptos].nome);
-    totalCriptos++;
-
-}
-
-void excluir_criptomoeda() {
-    printf("\n");
-    printf("======== Excluir Criptomoeda ========\n");
-
-    if (totalCriptos == 0) {
-        printf("= Nenhuma criptomoeda cadastrada.\n");
-        return;
-    }
-
-    printf("= Criptomoedas cadastradas:\n");
-    for (int i = 0; i < totalCriptos; i++) {
-        printf("%d: %s (R$ %.2f)\n", i + 1, criptos[i].nome, criptos[i].valor);
-    }
-
-    int escolha;
-    printf("= Escolha a criptomoeda que deseja excluir: ");
-    scanf("%d", &escolha);
-
-    if (escolha < 1 || escolha > totalCriptos) {
-        printf("= Opção inválida.\n");
-        return;
-    }
-
-    for (int i = escolha - 1; i < totalCriptos - 1; i++) {
-        criptos[i] = criptos[i + 1];
-    }
-
-    totalCriptos--;
-    printf("= Criptomoeda excluída com sucesso!\n");
-}
-
-void adicionar_extrato(char cpf[], char descricao[]) {
-    if (totalExtratos >= MAX_EXTRATOS) {
-        printf("= Limite de extratos atingido.\n");
-        return;
-    }
-
-    strcpy(extratos[totalExtratos].cpf, cpf);
-    strcpy(extratos[totalExtratos].descricao, descricao);
-}
-
-void extrato_investidor(char cpf[]) {
-    printf("\n======== Extrato ========\n");
-    for (int i = 0; i < totalExtratos; i++) {
-        if (strcmp(extratos[i].cpf, cpf) == 0) {
-            printf("%s\n", extratos[i].descricao);
-        }
-    }
-}
-
-int menu(){
-    int opcao;
-    printf("\n");
-    printf("========= Menu ========\n");
-    printf("1: Consultar Saldo\n");
-    printf("2: Consultar Extrato\n");
-    printf("3: Depositar Reais\n");
-    printf("4: Sacar Reais\n");
-    printf("5: Comprar Criptomoedas\n");
-    printf("6: Vender Criptomoedas\n");
-    printf("7: Atualizar Cotação\n");
-    printf("8: Sair\n");
-    printf("Escolha uma opção: ");
-    scanf("%d", &opcao);
-    return opcao;
+    printf("\n======== Atualizar Cotação ========\n");
+    printf("Cotação atual:\n");
+    printf("Bitcoin: %.2f\n", valor_bitcoin);
+    printf("Ethereum: %.2f\n", valor_ethereum);
+    printf("Ripple: %.2f\n", valor_ripple);
 }
